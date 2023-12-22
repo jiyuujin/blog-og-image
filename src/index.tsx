@@ -1,5 +1,8 @@
 import { Hono } from 'hono'
 
+// @ts-expect-error
+import { parse } from 'twemoji-parser'
+
 type Bindings = {
   BLOG_BUCKET: R2Bucket
 }
@@ -31,11 +34,14 @@ async function handleRequest(c: any) {
     returnEmoji = cleanEmoji(emojiArray[0])
   }
 
-  const returnBody = emojiToSvg(returnEmoji)
+  const returnBody = parse(returnEmoji, { assetType: 'svg' })
+  const imageUrl = returnBody.length === 0 ? null : returnBody[0].url
 
-  await c.env.BLOG_BUCKET.put(`cache/${search}.svg`, returnBody)
+  const res = await fetch(imageUrl)
 
-  return new Response(returnBody, {
+  await c.env.BLOG_BUCKET.put(`cache/${search}.svg`, res.body)
+
+  return new Response(res.body, {
     headers: {
       'content-type': 'image/svg+xml;',
     },
