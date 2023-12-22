@@ -5,8 +5,8 @@
   "author": "jiyuujin <jiyuujinunite@gmail.com>",
   "private": true,
   "scripts": {
-    "dev": "wrangler dev src/index.ts",
-    "deploy": "wrangler deploy --minify src/index.ts"
+    "dev": "wrangler dev src/index.tsx",
+    "deploy": "wrangler deploy --minify src/index.tsx"
   },
   "dependencies": {
     "hono": "3.11.4"
